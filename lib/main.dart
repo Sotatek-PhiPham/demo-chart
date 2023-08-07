@@ -34,9 +34,9 @@ class MyHomePage extends StatelessWidget {
           title: const Text('chart'),
         ),
         body: Container(
-          color: Colors.amber,
+          color: Color(0xff070E45),
           width: double.infinity,
-          height: 500,
+          height: 800,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +51,7 @@ class MyHomePage extends StatelessWidget {
                   YAxisWidget(width: 50, height: 400),
                   Expanded(child: MainChartWidget(width: double.infinity, height: 400, data: [],)),
                   Container(
-                    color: Colors.blue,
+                    color: Colors.transparent,
                     width: 20,
                     height: 400,
                   ),
@@ -64,6 +64,8 @@ class MyHomePage extends StatelessWidget {
                   height: 50,
                   distanceFromStartToFirstLabel: 50,
                   data: []),
+
+
             ],
           ),
         ));

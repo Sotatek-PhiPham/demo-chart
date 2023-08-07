@@ -1,6 +1,7 @@
 import 'package:demo_chart/sleep_chart_data.dart';
 import 'package:demo_chart/sleep_stage_enum.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 
 class MainChartWidget extends StatelessWidget {
   final double width;
@@ -19,7 +20,8 @@ class MainChartWidget extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      color: Colors.blue,
+      //color: Color(0xff070E45),
+      color: Colors.white,
       child: CustomPaint(
         painter: MainChartPaint(sleepData),
       ),
@@ -37,14 +39,8 @@ class MainChartPaint extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = _strokeWidth
-      ..strokeCap = StrokeCap.round;
-    final path = Path();
-    _drawForFirstData(canvas, size);
-    _drawForLastData(canvas, size);
+    _drawForFirstData(canvas, size, data.first.level.color);
+    _drawForLastData(canvas, size, data.last.level.color);
 
     // vẽ item đầu tiên
 
@@ -52,8 +48,6 @@ class MainChartPaint extends CustomPainter {
       SleepChartData? pItem = i > 0 ? data[i - 1] : null;
       SleepChartData cItem = data[i];
       SleepChartData? nItem = i + 1 < data.length ? data[i + 1] : null;
-      List<Offset> cOffsets = calculateOffsetForItem(size, cItem);
-      List<Offset>? nOffsets = nItem == null ? null : calculateOffsetForItem(size, nItem);
       if (nItem != null) {
         _drawVerticalLine(canvas, size, cItem, nItem);
       }
@@ -64,9 +58,9 @@ class MainChartPaint extends CustomPainter {
 
   }
 
-  void _drawForFirstData(Canvas canvas, Size size) {
+  void _drawForFirstData(Canvas canvas, Size size, Color color) {
     final paint = Paint()
-      ..color = Colors.red
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = _strokeWidth
       ..strokeCap = StrokeCap.round;
@@ -87,9 +81,9 @@ class MainChartPaint extends CustomPainter {
     canvas.drawPath(path, paint);
   }
 
-  void _drawForLastData(Canvas canvas, Size size) {
+  void _drawForLastData(Canvas canvas, Size size, Color color) {
     final paint = Paint()
-      ..color = Colors.amber
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = _strokeWidth
       ..strokeCap = StrokeCap.round;
@@ -114,22 +108,24 @@ class MainChartPaint extends CustomPainter {
   }
 
   void _drawVerticalLine(Canvas canvas, Size size, SleepChartData s1, SleepChartData s2) {
-    final paint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = _strokeWidth
-      ..strokeCap = StrokeCap.round;
     List<Offset> o1 = calculateOffsetForItem(size, s1);
     List<Offset> o2 =calculateOffsetForItem(size, s2);
     late Offset start, end;
-
     if (s1.level.value < s2.level.value) {
       start = Offset(o1[1].dx, o1[1].dy + _strokeWidth *2);
       end = Offset(o2[0].dx, o2[0].dy - _strokeWidth *2);
     } else {
-      start = Offset(o1[1].dx, o1[1].dy - _strokeWidth *2);
-      end = Offset(o2[0].dx, o2[0].dy + _strokeWidth *2);
+      end = Offset(o1[1].dx, o1[1].dy - _strokeWidth *2);
+      start = Offset(o2[0].dx, o2[0].dy + _strokeWidth *2);
     }
+
+    List<Color> colors = s1.level.colorTo(s2.level);
+
+    final paint = Paint()
+    ..shader = ui.Gradient.linear(start, end, colors, colors.length == 2 ? null : [0.0, 0.5, 1])
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = _strokeWidth
+      ..strokeCap = StrokeCap.round;
     canvas.drawLine(start, end, paint);
   }
 
@@ -141,7 +137,7 @@ class MainChartPaint extends CustomPainter {
     required SleepChartData nItem,
 }) {
     final paint = Paint()
-      ..color = Colors.black
+      ..color = cItem.level.color
       ..style = PaintingStyle.stroke
       ..strokeWidth = _strokeWidth
       ..strokeCap = StrokeCap.round;
@@ -153,33 +149,35 @@ class MainChartPaint extends CustomPainter {
       //  |___|
       print('============${o[1].dx - o[0].dx}');
       path.moveTo(o[0].dx, o[0].dy - _strokeWidth * 2);
-      //if (o[1].dx - o[0].dx <= _strokeWidth * 2) {
+      if (o[1].dx - o[0].dx <= _strokeWidth * 2) {
         path.cubicTo(o[0].dx, o[0].dy, o[1].dx, o[1].dy, o[1].dx, o[1].dy - _strokeWidth * 2);
-      // } else {
-      //   path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
-      //   path.lineTo(o[1].dx - _strokeWidth * 2, o[1].dy);
-      //   path.quadraticBezierTo(o[1].dx, o[1].dy, o[1].dx, o[1].dy - _strokeWidth * 2);
-      // }
+       } else {
+        path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
+        path.lineTo(o[1].dx - _strokeWidth * 2, o[1].dy);
+        path.quadraticBezierTo(o[1].dx, o[1].dy, o[1].dx, o[1].dy - _strokeWidth * 2);
+      }
 
     } else if (pItem.level.value > cItem.level.value && cItem.level.value < nItem.level.value) {
       //u ngược
       //  |---|
       //  |   |
       path.moveTo(o[0].dx, o[0].dy + _strokeWidth * 2);
-      //if (o[1].dx - o[0].dx <= _strokeWidth * 2) {
+      if (o[1].dx - o[0].dx <= _strokeWidth * 2) {
         path.cubicTo(o[0].dx, o[0].dy, o[1].dx, o[1].dy, o[1].dx, o[1].dy + _strokeWidth * 2);
-      // } else {
-      //   path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
-      //   path.lineTo(o[1].dx - _strokeWidth * 2, o[1].dy);
-      //   path.quadraticBezierTo(o[1].dx, o[1].dy, o[1].dx, o[1].dy + _strokeWidth * 2);
-      // }
+      } else {
+        path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
+        path.lineTo(o[1].dx - _strokeWidth * 2, o[1].dy);
+        path.quadraticBezierTo(o[1].dx, o[1].dy, o[1].dx, o[1].dy + _strokeWidth * 2);
+      }
 
     } else if (pItem.level.value < cItem.level.value && cItem.level.value < nItem.level.value) {
+      // S xuôi, S ngược
       path.moveTo(o[0].dx, o[0].dy - _strokeWidth * 2);
       path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
       path.lineTo(o[1].dx - _strokeWidth * 2, o[1].dy);
       path.quadraticBezierTo(o[1].dx, o[1].dy, o[1].dx, o[1].dy + _strokeWidth * 2);
     } else if (pItem.level.value > cItem.level.value && cItem.level.value > nItem.level.value) {
+      // S xuôi, S ngược
       path.moveTo(o[0].dx, o[0].dy + _strokeWidth * 2);
       path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
       path.lineTo(o[1].dx - _strokeWidth * 2, o[1].dy);

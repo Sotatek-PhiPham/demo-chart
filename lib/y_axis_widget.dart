@@ -30,6 +30,7 @@ class YAxisPaint extends CustomPainter {
     for (SleepStageEnum item in SleepStageEnum.values) {
       TextPainter tp = drawYAxisLabel(
         label: item.name,
+        color: item.color,
       );
       tp.paint(
           canvas, calculatePositionForYAxisLabel(size: size, sleepStage: item));
@@ -45,7 +46,7 @@ class YAxisPaint extends CustomPainter {
     required Size size,
     required SleepStageEnum sleepStage,
   }) {
-    double heightOfLabel = drawYAxisLabel(label: SleepStageEnum.values[0].name).height;
+    double heightOfLabel = drawYAxisLabel(label: SleepStageEnum.values[0].name, color: sleepStage.color).height;
     const x = 0.0;
     double distanceBetween2labels = (size.height - (heightOfLabel * 4)) / (SleepStageEnum.values.length - 1);
     final y = sleepStage.value * distanceBetween2labels + sleepStage.value * heightOfLabel;
@@ -55,9 +56,10 @@ class YAxisPaint extends CustomPainter {
   TextPainter drawYAxisLabel({
     required String label,
     double? maxWidth,
+    required Color color,
   }) {
-    const textStyle = TextStyle(
-      color: Colors.black,
+    var textStyle = TextStyle(
+      color: color,
       fontSize: 15,
     );
     final textSpan = TextSpan(
