@@ -50,11 +50,7 @@ class MyHomePage extends StatelessWidget {
                 children: [
                   YAxisWidget(width: 50, height: 400),
                   Expanded(child: MainChartWidget(width: double.infinity, height: 400, data: [],)),
-                  Container(
-                    color: Colors.transparent,
-                    width: 20,
-                    height: 400,
-                  ),
+                  SizedBox(width: 10,)
                 ],
               ),
 

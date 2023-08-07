@@ -141,10 +141,4 @@ class XAxisPaint extends CustomPainter {
     textPainter.layout(minWidth: 0, maxWidth: maxWidth ?? double.infinity);
     return textPainter;
   }
-
-  int _totalTimeInSeconds() {
-    DateTime start = data.first.dateTime;
-    DateTime end = data.last.dateTime;
-    return end.difference(start).inSeconds;
-  }
 }

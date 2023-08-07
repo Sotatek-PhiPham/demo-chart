@@ -33,7 +33,6 @@ class MainChartPaint extends CustomPainter {
   final List<SleepChartData> data;
 
   final double _strokeWidth = 3;
-  final int _numOfLabel = 9;
 
   MainChartPaint(this.data);
 
@@ -41,8 +40,6 @@ class MainChartPaint extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     _drawForFirstData(canvas, size, data.first.level.color);
     _drawForLastData(canvas, size, data.last.level.color);
-
-    // vẽ item đầu tiên
 
     for (int i = 0; i < data.length; i++) {
       SleepChartData? pItem = i > 0 ? data[i - 1] : null;
@@ -64,19 +61,17 @@ class MainChartPaint extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = _strokeWidth
       ..strokeCap = StrokeCap.round;
+
     final path = Path();
-    List<Offset> firstItemOffsets = calculateOffsetForItem(size, data.first);
-    path.moveTo(firstItemOffsets[0].dx, firstItemOffsets[0].dy);
-    path.lineTo(
-        firstItemOffsets[1].dx - _strokeWidth * 2, firstItemOffsets[1].dy);
+    List<Offset> o = calculateOffsetForItem(size, data.first);
+    path.moveTo(o[0].dx, o[0].dy);
+    path.lineTo(o[1].dx - _strokeWidth * 2, o[1].dy);
     if (data[1].level.value > data.first.level.value) {
       // bo xuống
-      path.quadraticBezierTo(firstItemOffsets[1].dx, firstItemOffsets[1].dy,
-          firstItemOffsets[1].dx, firstItemOffsets[1].dy + _strokeWidth * 2);
+      path.quadraticBezierTo(o[1].dx, o[1].dy, o[1].dx, o[1].dy + _strokeWidth * 2);
     } else {
       // bo lên
-      path.quadraticBezierTo(firstItemOffsets[1].dx, firstItemOffsets[1].dy,
-          firstItemOffsets[1].dx, firstItemOffsets[1].dy - _strokeWidth * 2);
+      path.quadraticBezierTo(o[1].dx, o[1].dy, o[1].dx, o[1].dy - _strokeWidth * 2);
     }
     canvas.drawPath(path, paint);
   }
@@ -87,23 +82,29 @@ class MainChartPaint extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = _strokeWidth
       ..strokeCap = StrokeCap.round;
+
+
     final path = Path();
-    List<Offset> lastItemOffsets = calculateOffsetForItem(size, data.last);
+    List<Offset> o = calculateOffsetForItem(size, data.last);
     if (data[data.length - 2].level.value > data.last.level.value) {
       // bo xuống
-      path.moveTo(
-          lastItemOffsets[0].dx, lastItemOffsets[0].dy + _strokeWidth * 2);
-      path.quadraticBezierTo(lastItemOffsets[0].dx, lastItemOffsets[0].dy,
-          lastItemOffsets[0].dx + _strokeWidth * 2, lastItemOffsets[0].dy);
+      path.moveTo(o[0].dx, o[0].dy + _strokeWidth * 2);
+      if (o[1].dx - o[0].dx < _strokeWidth * 2) {
+        path.quadraticBezierTo(o[0].dx , o[0].dy, o[1].dx, o[1].dy);
+      } else {
+        path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
+        path.lineTo(o[1].dx, o[1].dy);
+      }
+
+
     } else {
       // bo lên
-      path.moveTo(
-          lastItemOffsets[0].dx, lastItemOffsets[0].dy - _strokeWidth * 2);
-      path.quadraticBezierTo(lastItemOffsets[0].dx, lastItemOffsets[0].dy,
-          lastItemOffsets[0].dx + _strokeWidth * 2, lastItemOffsets[0].dy);
+      path.moveTo(o[0].dx, o[0].dy - _strokeWidth * 2);
+      path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
+      path.lineTo(o[1].dx, o[1].dy);
     }
 
-    path.lineTo(lastItemOffsets[1].dx, lastItemOffsets[1].dy);
+
     canvas.drawPath(path, paint);
   }
 
@@ -150,7 +151,7 @@ class MainChartPaint extends CustomPainter {
       print('============${o[1].dx - o[0].dx}');
       path.moveTo(o[0].dx, o[0].dy - _strokeWidth * 2);
       if (o[1].dx - o[0].dx <= _strokeWidth * 2) {
-        path.cubicTo(o[0].dx, o[0].dy, o[1].dx, o[1].dy, o[1].dx, o[1].dy - _strokeWidth * 2);
+        path.cubicTo(o[0].dx, o[0].dy + _strokeWidth/2, o[1].dx, o[1].dy + _strokeWidth/2, o[1].dx, o[1].dy - _strokeWidth * 2  + _strokeWidth/2);
        } else {
         path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
         path.lineTo(o[1].dx - _strokeWidth * 2, o[1].dy);
@@ -163,7 +164,7 @@ class MainChartPaint extends CustomPainter {
       //  |   |
       path.moveTo(o[0].dx, o[0].dy + _strokeWidth * 2);
       if (o[1].dx - o[0].dx <= _strokeWidth * 2) {
-        path.cubicTo(o[0].dx, o[0].dy, o[1].dx, o[1].dy, o[1].dx, o[1].dy + _strokeWidth * 2);
+        path.cubicTo(o[0].dx, o[0].dy - _strokeWidth/2, o[1].dx, o[1].dy- _strokeWidth/2, o[1].dx, o[1].dy + _strokeWidth * 2- _strokeWidth/2);
       } else {
         path.quadraticBezierTo(o[0].dx, o[0].dy, o[0].dx + _strokeWidth * 2, o[0].dy);
         path.lineTo(o[1].dx - _strokeWidth * 2, o[1].dy);
@@ -191,23 +192,26 @@ class MainChartPaint extends CustomPainter {
     return false;
   }
 
+  /// calculate offset for [SleepChartData]
+  /// return list[Offset] with first item is start offset, second item is end offset
+  ///
   List<Offset> calculateOffsetForItem(Size size, SleepChartData item) {
+    // count total sleep time in seconds
     DateTime start = data.first.dateTime;
     DateTime end = data.last.dateTime;
-    int seconds = end.difference(start).inSeconds;
-    double pixelPerSecond = size.width / seconds;
+    int seconds = end.difference(start).inSeconds + data.last.seconds;
+
+    double pixelPerSecond = (size.width - _strokeWidth) / seconds;
 
     double x1 = pixelPerSecond * item.dateTime.difference(start).inSeconds;
-    double y1 =
-        item.level.value * ((size.height) / (SleepStageEnum.values.length - 1));
+    double y1 = item.level.value * ((size.height - _strokeWidth) / (SleepStageEnum.values.length - 1));
 
     double x2 = x1 + item.seconds * pixelPerSecond;
-    double y2 =
-        item.level.value * ((size.height) / (SleepStageEnum.values.length - 1));
+    double y2 = item.level.value * ((size.height - _strokeWidth) / (SleepStageEnum.values.length - 1));
 
     return [
-      Offset(x1, y1),
-      Offset(x2, y2),
+      Offset(x1 == 0 ? _strokeWidth / 2 : x1, y1 == 0 ? _strokeWidth / 2 : y1),
+      Offset(x1 == 2 ? _strokeWidth / 2 : x2, y2 == 0 ? _strokeWidth / 2 : y2),
     ];
   }
 }
