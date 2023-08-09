@@ -1,6 +1,4 @@
 import 'package:demo_chart/main_chart.dart';
-import 'package:demo_chart/x_axis_widget.dart';
-import 'package:demo_chart/y_axis_widget.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -36,34 +34,8 @@ class MyHomePage extends StatelessWidget {
         body: Container(
           color: Color(0xff070E45),
           width: double.infinity,
-          height: 800,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                color: Colors.blue,
-                height: 20,
-                width: double.infinity,
-              ),
-              Row(
-                children: [
-                  YAxisWidget(width: 50, height: 400),
-                  Expanded(child: MainChartWidget(width: double.infinity, height: 400, data: [],)),
-                  SizedBox(width: 10,)
-                ],
-              ),
-
-              SizedBox(height: 5,),
-              XAxisWidget(
-                  width: double.infinity,
-                  height: 50,
-                  distanceFromStartToFirstLabel: 50,
-                  data: []),
-
-
-            ],
-          ),
+          height: 400,
+          child: MainChartWidget(width: double.infinity, height: 400, data: [],)
         ));
   }
 }

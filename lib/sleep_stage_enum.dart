@@ -55,14 +55,14 @@ extension SleepStageEnumExtension on SleepStageEnum {
     }
   }
 
-  List<Color> colorTo(SleepStageEnum s) {
+  List<Color> colorTo(SleepStageEnum s, {double opacity = 1}) {
     List<Color> result = [];
     int start = value < s.value ? value : s.value;
     int end = value < s.value ? s.value : value;
     for (int i = start ; i <= end; i++) {
       int index = SleepStageEnum.values.indexWhere((item) => item.value == i);
       if (index >= 0) {
-        result.add(SleepStageEnum.values[index].color);
+        result.add(SleepStageEnum.values[index].color.withOpacity(opacity));
       }
     }
     print(result);
