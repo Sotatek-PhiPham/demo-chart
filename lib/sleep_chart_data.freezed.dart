@@ -20,6 +20,12 @@ SleepChartData _$SleepChartDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SleepChartData {
+  @JsonKey(includeFromJson: false)
+  int get index => throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false)
+  List<Offset> get mainOffset => throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false)
+  List<Offset> get borderOffset => throw _privateConstructorUsedError;
   DateTime get dateTime => throw _privateConstructorUsedError;
   SleepStageEnum get level => throw _privateConstructorUsedError;
   int get seconds => throw _privateConstructorUsedError;
@@ -36,7 +42,13 @@ abstract class $SleepChartDataCopyWith<$Res> {
           SleepChartData value, $Res Function(SleepChartData) then) =
       _$SleepChartDataCopyWithImpl<$Res, SleepChartData>;
   @useResult
-  $Res call({DateTime dateTime, SleepStageEnum level, int seconds});
+  $Res call(
+      {@JsonKey(includeFromJson: false) int index,
+      @JsonKey(includeFromJson: false) List<Offset> mainOffset,
+      @JsonKey(includeFromJson: false) List<Offset> borderOffset,
+      DateTime dateTime,
+      SleepStageEnum level,
+      int seconds});
 }
 
 /// @nodoc
@@ -52,11 +64,26 @@ class _$SleepChartDataCopyWithImpl<$Res, $Val extends SleepChartData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? index = null,
+    Object? mainOffset = null,
+    Object? borderOffset = null,
     Object? dateTime = null,
     Object? level = null,
     Object? seconds = null,
   }) {
     return _then(_value.copyWith(
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+      mainOffset: null == mainOffset
+          ? _value.mainOffset
+          : mainOffset // ignore: cast_nullable_to_non_nullable
+              as List<Offset>,
+      borderOffset: null == borderOffset
+          ? _value.borderOffset
+          : borderOffset // ignore: cast_nullable_to_non_nullable
+              as List<Offset>,
       dateTime: null == dateTime
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -74,32 +101,53 @@ class _$SleepChartDataCopyWithImpl<$Res, $Val extends SleepChartData>
 }
 
 /// @nodoc
-abstract class _$$_SleepChartDataCopyWith<$Res>
+abstract class _$$SleepChartDataImplCopyWith<$Res>
     implements $SleepChartDataCopyWith<$Res> {
-  factory _$$_SleepChartDataCopyWith(
-          _$_SleepChartData value, $Res Function(_$_SleepChartData) then) =
-      __$$_SleepChartDataCopyWithImpl<$Res>;
+  factory _$$SleepChartDataImplCopyWith(_$SleepChartDataImpl value,
+          $Res Function(_$SleepChartDataImpl) then) =
+      __$$SleepChartDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime dateTime, SleepStageEnum level, int seconds});
+  $Res call(
+      {@JsonKey(includeFromJson: false) int index,
+      @JsonKey(includeFromJson: false) List<Offset> mainOffset,
+      @JsonKey(includeFromJson: false) List<Offset> borderOffset,
+      DateTime dateTime,
+      SleepStageEnum level,
+      int seconds});
 }
 
 /// @nodoc
-class __$$_SleepChartDataCopyWithImpl<$Res>
-    extends _$SleepChartDataCopyWithImpl<$Res, _$_SleepChartData>
-    implements _$$_SleepChartDataCopyWith<$Res> {
-  __$$_SleepChartDataCopyWithImpl(
-      _$_SleepChartData _value, $Res Function(_$_SleepChartData) _then)
+class __$$SleepChartDataImplCopyWithImpl<$Res>
+    extends _$SleepChartDataCopyWithImpl<$Res, _$SleepChartDataImpl>
+    implements _$$SleepChartDataImplCopyWith<$Res> {
+  __$$SleepChartDataImplCopyWithImpl(
+      _$SleepChartDataImpl _value, $Res Function(_$SleepChartDataImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? index = null,
+    Object? mainOffset = null,
+    Object? borderOffset = null,
     Object? dateTime = null,
     Object? level = null,
     Object? seconds = null,
   }) {
-    return _then(_$_SleepChartData(
+    return _then(_$SleepChartDataImpl(
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+      mainOffset: null == mainOffset
+          ? _value._mainOffset
+          : mainOffset // ignore: cast_nullable_to_non_nullable
+              as List<Offset>,
+      borderOffset: null == borderOffset
+          ? _value._borderOffset
+          : borderOffset // ignore: cast_nullable_to_non_nullable
+              as List<Offset>,
       dateTime: null == dateTime
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -118,12 +166,41 @@ class __$$_SleepChartDataCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_SleepChartData implements _SleepChartData {
-  const _$_SleepChartData(
-      {required this.dateTime, required this.level, required this.seconds});
+class _$SleepChartDataImpl implements _SleepChartData {
+  const _$SleepChartDataImpl(
+      {@JsonKey(includeFromJson: false) this.index = 0,
+      @JsonKey(includeFromJson: false) final List<Offset> mainOffset = const [],
+      @JsonKey(includeFromJson: false)
+      final List<Offset> borderOffset = const [],
+      required this.dateTime,
+      required this.level,
+      required this.seconds})
+      : _mainOffset = mainOffset,
+        _borderOffset = borderOffset;
 
-  factory _$_SleepChartData.fromJson(Map<String, dynamic> json) =>
-      _$$_SleepChartDataFromJson(json);
+  factory _$SleepChartDataImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SleepChartDataImplFromJson(json);
+
+  @override
+  @JsonKey(includeFromJson: false)
+  final int index;
+  final List<Offset> _mainOffset;
+  @override
+  @JsonKey(includeFromJson: false)
+  List<Offset> get mainOffset {
+    if (_mainOffset is EqualUnmodifiableListView) return _mainOffset;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_mainOffset);
+  }
+
+  final List<Offset> _borderOffset;
+  @override
+  @JsonKey(includeFromJson: false)
+  List<Offset> get borderOffset {
+    if (_borderOffset is EqualUnmodifiableListView) return _borderOffset;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_borderOffset);
+  }
 
   @override
   final DateTime dateTime;
@@ -134,14 +211,19 @@ class _$_SleepChartData implements _SleepChartData {
 
   @override
   String toString() {
-    return 'SleepChartData(dateTime: $dateTime, level: $level, seconds: $seconds)';
+    return 'SleepChartData(index: $index, mainOffset: $mainOffset, borderOffset: $borderOffset, dateTime: $dateTime, level: $level, seconds: $seconds)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SleepChartData &&
+            other is _$SleepChartDataImpl &&
+            (identical(other.index, index) || other.index == index) &&
+            const DeepCollectionEquality()
+                .equals(other._mainOffset, _mainOffset) &&
+            const DeepCollectionEquality()
+                .equals(other._borderOffset, _borderOffset) &&
             (identical(other.dateTime, dateTime) ||
                 other.dateTime == dateTime) &&
             (identical(other.level, level) || other.level == level) &&
@@ -150,17 +232,25 @@ class _$_SleepChartData implements _SleepChartData {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, dateTime, level, seconds);
+  int get hashCode => Object.hash(
+      runtimeType,
+      index,
+      const DeepCollectionEquality().hash(_mainOffset),
+      const DeepCollectionEquality().hash(_borderOffset),
+      dateTime,
+      level,
+      seconds);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SleepChartDataCopyWith<_$_SleepChartData> get copyWith =>
-      __$$_SleepChartDataCopyWithImpl<_$_SleepChartData>(this, _$identity);
+  _$$SleepChartDataImplCopyWith<_$SleepChartDataImpl> get copyWith =>
+      __$$SleepChartDataImplCopyWithImpl<_$SleepChartDataImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_SleepChartDataToJson(
+    return _$$SleepChartDataImplToJson(
       this,
     );
   }
@@ -168,13 +258,25 @@ class _$_SleepChartData implements _SleepChartData {
 
 abstract class _SleepChartData implements SleepChartData {
   const factory _SleepChartData(
-      {required final DateTime dateTime,
+      {@JsonKey(includeFromJson: false) final int index,
+      @JsonKey(includeFromJson: false) final List<Offset> mainOffset,
+      @JsonKey(includeFromJson: false) final List<Offset> borderOffset,
+      required final DateTime dateTime,
       required final SleepStageEnum level,
-      required final int seconds}) = _$_SleepChartData;
+      required final int seconds}) = _$SleepChartDataImpl;
 
   factory _SleepChartData.fromJson(Map<String, dynamic> json) =
-      _$_SleepChartData.fromJson;
+      _$SleepChartDataImpl.fromJson;
 
+  @override
+  @JsonKey(includeFromJson: false)
+  int get index;
+  @override
+  @JsonKey(includeFromJson: false)
+  List<Offset> get mainOffset;
+  @override
+  @JsonKey(includeFromJson: false)
+  List<Offset> get borderOffset;
   @override
   DateTime get dateTime;
   @override
@@ -183,6 +285,6 @@ abstract class _SleepChartData implements SleepChartData {
   int get seconds;
   @override
   @JsonKey(ignore: true)
-  _$$_SleepChartDataCopyWith<_$_SleepChartData> get copyWith =>
+  _$$SleepChartDataImplCopyWith<_$SleepChartDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

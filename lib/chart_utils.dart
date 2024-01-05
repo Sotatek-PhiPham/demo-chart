@@ -55,4 +55,54 @@ class ChartUtils {
     ];
   }
 
+  static List<Offset> calculate4OffsetForItem({
+    required SleepChartData item,
+    required List<SleepChartData> data,
+    required Size size,
+  }) {
+    double dxStart = ChartUtils.yAxisWidth;
+    double dyEnd = size.height - ChartUtils.xAxisHeight;
+    double pixelPerSecond = (size.width - dxStart - ChartUtils.strokeWidth) / countTotalSleepTimeInSeconds(data);
+
+    double x1 = dxStart + pixelPerSecond * item.dateTime.difference(data.first.dateTime).inSeconds;
+    double y1 = item.level.value *
+        ((dyEnd - ChartUtils.strokeWidth) / (SleepStageEnum.values.length - 1));
+
+    double x2 = x1 + item.seconds * pixelPerSecond;
+    double y2 = item.level.value *
+        ((dyEnd - ChartUtils.strokeWidth) / (SleepStageEnum.values.length - 1));
+
+    return [
+      Offset(x1, y1),
+      Offset(x2, y2),
+      Offset(x2, y2 + 40),
+      Offset(x1, y1 + 40),
+    ];
+  }
+
+  static List<Offset> calculate4OffsetForItemBorder({
+    required SleepChartData item,
+    required List<SleepChartData> data,
+    required Size size,
+  }) {
+    double dxStart = ChartUtils.yAxisWidth;
+    double dyEnd = size.height - ChartUtils.xAxisHeight;
+    double pixelPerSecond = (size.width - dxStart - ChartUtils.strokeWidth) / countTotalSleepTimeInSeconds(data);
+
+    double x1 = dxStart + pixelPerSecond * item.dateTime.difference(data.first.dateTime).inSeconds;
+    double y1 = item.level.value *
+        ((dyEnd - ChartUtils.strokeWidth) / (SleepStageEnum.values.length - 1));
+
+    double x2 = x1 + item.seconds * pixelPerSecond;
+    double y2 = item.level.value *
+        ((dyEnd - ChartUtils.strokeWidth) / (SleepStageEnum.values.length - 1));
+
+    return [
+      Offset(x1 -4, y1 -4),
+      Offset(x2 + 4, y2 -4),
+      Offset(x2 + 4, y2 + 44),
+      Offset(x1 - 4, y1 + 44),
+    ];
+  }
+
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:demo_chart/sleep_stage_enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -7,6 +9,15 @@ part 'sleep_chart_data.g.dart';
 @freezed
 class SleepChartData with _$SleepChartData {
   const factory SleepChartData({
+    @Default(0)
+    @JsonKey(includeFromJson: false)
+    int index,
+    @Default([])
+    @JsonKey(includeFromJson: false)
+    List<Offset> mainOffset,
+    @Default([])
+    @JsonKey(includeFromJson: false)
+    List<Offset> borderOffset,
     required DateTime dateTime,
     required SleepStageEnum level,
     required int seconds,

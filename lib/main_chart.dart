@@ -26,6 +26,7 @@ class MainChartWidget extends StatelessWidget {
       width: width,
       height: height,
       color: Color(0xff070E45),
+      padding: const EdgeInsets.only(top: 10),
       //color: Colors.white,
       child: CustomPaint(
         painter: MainChartPaint(sleepData),
@@ -44,9 +45,9 @@ class MainChartPaint extends CustomPainter {
     XAxis.drawXAxis(canvas: canvas, size: size, startTime: data.first.dateTime, totalTimeInSeconds: ChartUtils.countTotalSleepTimeInSeconds(data));
     YAxis.drawYAxis(canvas: canvas, size: size);
 
-    StepLine(canvas: canvas, size: size, data: data, opacity: 0.2).drawStepLine();
+    StepLine(canvas: canvas, size: size, data: data).drawStepLine();
 
-    SleepStage.drawSleepStage(canvas: canvas, size: size, stage: SleepStageEnum.rem, data: data);
+    //SleepStage.drawSleepStage(canvas: canvas, size: size, stage: SleepStageEnum.rem, data: data);
 
   }
 

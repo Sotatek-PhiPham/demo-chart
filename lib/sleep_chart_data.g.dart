@@ -6,14 +6,15 @@ part of 'sleep_chart_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_SleepChartData _$$_SleepChartDataFromJson(Map<String, dynamic> json) =>
-    _$_SleepChartData(
+_$SleepChartDataImpl _$$SleepChartDataImplFromJson(Map<String, dynamic> json) =>
+    _$SleepChartDataImpl(
       dateTime: DateTime.parse(json['dateTime'] as String),
       level: $enumDecode(_$SleepStageEnumEnumMap, json['level']),
       seconds: json['seconds'] as int,
     );
 
-Map<String, dynamic> _$$_SleepChartDataToJson(_$_SleepChartData instance) =>
+Map<String, dynamic> _$$SleepChartDataImplToJson(
+        _$SleepChartDataImpl instance) =>
     <String, dynamic>{
       'dateTime': instance.dateTime.toIso8601String(),
       'level': _$SleepStageEnumEnumMap[instance.level]!,
