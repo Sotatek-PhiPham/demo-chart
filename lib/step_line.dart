@@ -43,6 +43,7 @@ class StepLine {
   }
 
   void drawStepLine() {
+
     // _drawForFirstData();
     // _drawForLastData();
     for (int i = 0; i < data.length; i++) {
@@ -55,6 +56,8 @@ class StepLine {
       );
     }
 
+    List<Offset> offsets = [];
+
     final paint = Paint()
       ..color = Colors.white.withOpacity(0.5)
       ..style = PaintingStyle.fill
@@ -62,10 +65,10 @@ class StepLine {
       ..strokeCap = StrokeCap.square;
     final path = Path();
     SleepChartData current = data.first;
-    path.moveTo(current.borderOffset[0].dx, current.borderOffset[0].dy + 10);
+    path.moveTo(current.borderOffset[0].dx, current.borderOffset[0].dy);
 
-    path.quadraticBezierTo(
-        current.borderOffset[0].dx, current.borderOffset[0].dy, current.borderOffset[0].dx + 10, current.borderOffset[0].dy);
+    offsets.add(Offset(current.borderOffset[0].dx, current.borderOffset[0].dy + 10));
+    offsets.add(current.borderOffset[0]);
 
     do {
       SleepChartData? same = data.firstWhereOrNull((element) =>
@@ -74,286 +77,319 @@ class StepLine {
       if (same != null) {
         SleepChartData next = data[current.index + 1];
         if (same.borderOffset[0].dx - current.borderOffset[1].dx > 0) {
-          _drawFromCurrentToNext(current, next, path);
+          _drawFromCurrentToNext(current, next, path, offsets);
           current = next;
         } else {
           if (next.level.value < same.level.value) {
             path.lineTo(next.borderOffset[0].dx, current.borderOffset[1].dy);
             path.lineTo(next.borderOffset[0].dx, next.borderOffset[0].dy);
             path.lineTo(next.borderOffset[1].dx, next.borderOffset[1].dy);
+
+            offsets.removeWhere((e) => e.dx == current.borderOffset[1].dx && e.dy == current.borderOffset[1].dy);
+            offsets.add(Offset(next.borderOffset[0].dx, current.borderOffset[1].dy));
+            offsets.add(Offset(next.borderOffset[0].dx, next.borderOffset[0].dy));
+            offsets.add(Offset(next.borderOffset[1].dx, next.borderOffset[1].dy));
+
             current = next;
           } else {
             path.lineTo(same.borderOffset[1].dx - 10, same.borderOffset[1].dy);
+            path.lineTo(same.borderOffset[1].dx, same.borderOffset[1].dy,);
 
-            path.quadraticBezierTo(
-              same.borderOffset[1].dx,
-              same.borderOffset[1].dy,
-              same.borderOffset[1].dx,
-              same.borderOffset[1].dy + 10,
-            );
+            offsets.removeWhere((e) => e.dx == current.borderOffset[1].dx && e.dy == current.borderOffset[1].dy);
+            offsets.add(Offset(same.borderOffset[1].dx, same.borderOffset[1].dy,));
+
             current = same;
           }
         }
       } else {
         SleepChartData next = data[current.index + 1];
-        _drawFromCurrentToNext(current, next, path);
+        _drawFromCurrentToNext(current, next, path, offsets);
         current = next;
       }
     } while (current.index < data.length - 1);
 
     path.lineTo(current.borderOffset[2].dx, current.borderOffset[2].dy);
     path.lineTo(current.borderOffset[3].dx, current.borderOffset[3].dy);
+
+    offsets.add(Offset(current.borderOffset[2].dx, current.borderOffset[2].dy));
+    offsets.add(Offset(current.borderOffset[3].dx, current.borderOffset[3].dy));
+
     do {
-      SleepChartData? same = data.firstWhereOrNull((element) =>
+      SleepChartData? same = data.lastWhereOrNull((element) =>
           element.level.value == current.level.value &&
           element.index < current.index);
+
       SleepChartData next = data[current.index - 1];
+
       if (next.level.value > current.level.value) {
         path.lineTo(next.borderOffset[1].dx, current.borderOffset[3].dy);
         path.lineTo(next.borderOffset[2].dx, next.borderOffset[2].dy);
         path.lineTo(next.borderOffset[3].dx, next.borderOffset[3].dy);
+
+          offsets.removeWhere((e) => e.dx == current.borderOffset[3].dx && e.dy == current.borderOffset[3].dy);
+          offsets.add(Offset(next.borderOffset[1].dx, current.borderOffset[3].dy));
+          offsets.add(Offset(next.borderOffset[2].dx, next.borderOffset[2].dy));
+          offsets.add(Offset(next.borderOffset[3].dx, next.borderOffset[3].dy));
+
+
         current = next;
+
+
       } else {
         if (same == null) {
           path.lineTo(current.borderOffset[3].dx, next.borderOffset[3].dy);
           path.lineTo(next.borderOffset[3].dx, next.borderOffset[3].dy);
+
+
+          offsets.add(Offset(current.borderOffset[3].dx, next.borderOffset[3].dy));
+          offsets.add(Offset(next.borderOffset[3].dx, next.borderOffset[3].dy));
+
           current = next;
         } else {
           if (current.borderOffset[3].dx - same.borderOffset[2].dx > 0) {
             path.lineTo(current.borderOffset[3].dx, next.borderOffset[3].dy);
             path.lineTo(next.borderOffset[3].dx, next.borderOffset[3].dy);
+
+            offsets.add(Offset(current.borderOffset[3].dx, next.borderOffset[3].dy));
+            offsets.add(Offset(next.borderOffset[3].dx, next.borderOffset[3].dy));
+
             current = next;
           } else {
+
             path.lineTo(same.borderOffset[3].dx, same.borderOffset[3].dy);
+
+            offsets.removeWhere((e) => e.dx == current.borderOffset[3].dx && e.dy == current.borderOffset[3].dy);
+            offsets.add(Offset(same.borderOffset[3].dx, same.borderOffset[3].dy));
+
             current = same;
           }
         }
       }
     } while (current.index != 0);
+    offsets.add(Offset(current.borderOffset[0].dx, current.borderOffset[0].dy + 10));
     path.close();
-    canvas.drawPath(path, paint);
+    //canvas.drawPath(path, paint);
 
     for (int i = 0; i < data.length; i++) {
-      // SleepChartData? pItem = i > 0 ? data[i - 1] : null;
-      // SleepChartData cItem = data[i];
-      // SleepChartData? nItem = i + 1 < data.length ? data[i + 1] : null;
-      // if (nItem != null) {
-      //   _drawVerticalLine(cItem, nItem);
-      // }
-      // if (pItem != null && nItem != null) {
-      //   _drawULine(pItem: pItem, cItem: cItem, nItem: nItem);
-      // }
-
-      // drawRectangleFrom4Offset(
-      //     offset: ChartUtils.calculate4OffsetForItemBorder(
-      //         item: data[i], data: data, size: size),
-      //     color: Colors.white.withOpacity(0.5));
       drawRectangleFrom4Offset(
           offset: ChartUtils.calculate4OffsetForItem(
               item: data[i], data: data, size: size),
           color: Colors.blue);
     }
+
+    _drawBorder(canvas, offsets);
+
+    // final paintCircle = Paint()
+    //   ..color = Colors.blue
+    //   ..style = PaintingStyle.stroke
+    // ..strokeWidth = 2.0;
+    //
+    // for (int i = 0; i < offsets.length; i++) {
+    //   canvas.drawCircle(offsets[i], 2, paintCircle);
+    // }
+
+
+
+
+
+  }
+
+  void _drawBorder(Canvas canvas, List<Offset> offsets) {
+    final paint = Paint()
+      ..color = Colors.red.withOpacity(0.3)
+      ..style = PaintingStyle.fill;
+      //..strokeWidth = 2.0;
+
+
+
+
+    final path = Path();
+    path.moveTo(offsets[0].dx, offsets[0].dy);
+    for (int i = 1; i < offsets.length - 1; i++) {
+      Offset p = offsets[i - 1];
+      Offset c = offsets[i];
+      Offset n = offsets[i + 1];
+      Offset? n1 = i + 2 == offsets.length ? null : offsets[i + 2];
+
+      if (c.dx == p.dx && c.dy == n.dy && p.dy > c.dy && n.dx > c.dx) {
+        if (n1 != null && n.dx -c.dx < 20 && n.dy < n1.dy) {
+          //path.moveTo(c.dx, c.dy + 10);
+          path.cubicTo(c.dx, c.dy - 3, n.dx, n.dy - 3, n.dx, n.dy + 10);
+          path.lineTo(n1.dx, n1.dy - 10);
+          i = i + 1;
+          continue;
+        }
+        if (n1 != null && n.dx -c.dx < 20 && n.dy > n1.dy) {
+          //path.moveTo(c.dx, c.dy + 10);
+          if (n.dx -c.dx <= 10) {
+            path.quadraticBezierTo(c.dx, c.dy, n.dx, n.dy);
+          } else {
+            path.quadraticBezierTo(c.dx, c.dy, c.dx + 10, n.dy);
+            path.quadraticBezierTo(n.dx, n.dy, n.dx, n.dy - 10);
+          }
+          path.lineTo(n1.dx, n1.dy + 10);
+          i = i + 1;
+          continue;
+        }
+        //path.moveTo(c.dx, c.dy + 10);
+        path.quadraticBezierTo(c.dx, c.dy, c.dx + 10, c.dy);
+        path.lineTo(n.dx - 10, n.dy);
+        continue;
+      }
+      if (c.dy == p.dy && c.dx == n.dx && c.dx > p.dx && n.dy > c.dy) {
+        //path.moveTo(c.dx - 10, c.dy);
+        path.quadraticBezierTo(c.dx, c.dy, c.dx, c.dy + 10);
+        path.lineTo(n.dx, n.dy - 10);
+        continue;
+      }
+
+      if (c.dx == p.dx && c.dy == n.dy && p.dy < c.dy && n.dx > c.dx) {
+        if (n1 != null && n.dx - c.dx < 20 && n.dy > n1.dy) {
+          //path.moveTo(c.dx, c.dy -10);
+          path.cubicTo(c.dx, c.dy + 3, n.dx, n.dy + 3, n.dx, n.dy - 10);
+          path.lineTo(n1.dx, n1.dy + 10);
+          i = i + 1;
+          continue;
+        }
+        if (n1 != null && n.dx - c.dx < 20 && n.dy < n1.dy) {
+          //path.moveTo(c.dx, c.dy - 10);
+          if (n.dx -c.dx <= 10) {
+            path.lineTo(c.dx, c.dy);
+            path.quadraticBezierTo(n.dx, n.dy, n.dx, n.dy + 10);
+          } else {
+            path.quadraticBezierTo(c.dx, c.dy, c.dx + (n.dx - c.dx - 10) ,c.dy );
+            path.quadraticBezierTo(n.dx, n.dy, n.dx, n.dy + 10);
+          }
+          path.lineTo(n1.dx, n1.dy - 10);
+          i = i + 1;
+          continue;
+        }
+        //path.moveTo(c.dx, c.dy -10);
+        path.quadraticBezierTo(c.dx, c.dy, c.dx + 10, c.dy);
+        path.lineTo(n.dx - 10, n.dy);
+        continue;
+      }
+
+      if (p.dy == c.dy && c.dx == n.dx && c.dx > p.dx && n.dy < c.dy) {
+        //path.moveTo(c.dx - 10, c.dy);
+        path.quadraticBezierTo(c.dx, c.dy, c.dx, c.dy - 10);
+        path.lineTo(n.dx, n.dy + 10);
+        continue;
+      }
+
+      if (p.dx == c.dx && c.dy == n.dy && p.dy < c.dy && c.dx > n.dx) {
+        if (n1 != null && c.dx - n.dx < 20 && n.dy > n1.dy) {
+          //path.moveTo(c.dx, c.dy - 10);
+          path.cubicTo(c.dx, c.dy + 3, n.dx, n.dy + 3, n.dx, n.dy - 10);
+          path.lineTo(n1.dx, n1.dy + 10);
+          i = i + 1;
+          continue;
+        }
+        if (n1 != null && c.dx - n.dx < 20 && n.dy < n1.dy) {
+          //path.moveTo(c.dx, c.dy - 10);
+          if (c.dx - n.dx <= 10) {
+            path.quadraticBezierTo(c.dx, c.dy, n.dx, n.dy);
+          } else {
+            path.quadraticBezierTo(c.dx, c.dy, c.dx - 10, c.dy);
+            path.quadraticBezierTo(n.dx, n.dy, n.dx, n.dy + 10);
+          }
+          path.lineTo(n1.dx, n1.dy - 10);
+          i = i + 1;
+          continue;
+        }
+        //path.moveTo(c.dx, c.dy - 10);
+        path.quadraticBezierTo(c.dx, c.dy, c.dx - 10, c.dy);
+        path.lineTo(n.dx + 10, n.dy);
+        continue;
+      }
+
+      if (n.dx == c.dx && n.dy < c.dy && c.dx < p.dx && c.dy == p.dy) {
+        //path.moveTo(c.dx + 10, c.dy);
+        path.quadraticBezierTo(c.dx, c.dy, c.dx, c.dy - 10);
+        path.lineTo(n.dx, n.dy + 10);
+        continue;
+      }
+
+      if (c.dx == p.dx && c.dy < p.dy && n.dy == c.dy && n.dx < c.dx) {
+        if (n1 != null && c.dx - n.dx < 20 && n.dy < n1.dy) {
+          //path.moveTo(c.dx, c.dy + 10);
+          path.cubicTo(c.dx, c.dy - 3, n.dx, n.dy - 3, n.dx, n.dy + 10);
+          path.lineTo(n1.dx, n1.dy - 10);
+          i = i + 1;
+          continue;
+        }
+        if (n1 != null && c.dx - n.dx < 20 && n.dy > n1.dy) {
+          //path.moveTo(c.dx, c.dy + 10);
+          if (c.dx - n.dx <= 10) {
+            path.lineTo(c.dx, c.dy);
+            path.quadraticBezierTo(n.dx, n.dy, n.dx, n.dy - 10);
+          } else {
+            path.quadraticBezierTo(c.dx, c.dy, n.dx + 10, n.dy);
+            path.quadraticBezierTo(n.dx, n.dy, n.dx, n.dy - 10);
+          }
+          path.lineTo(n1.dx, n1.dy + 10);
+          i = i + 1;
+          continue;
+        }
+        //path.moveTo(c.dx, c.dy + 10);
+        path.quadraticBezierTo(c.dx, c.dy, c.dx - 10, c.dy);
+        path.lineTo(n.dx + 10, n.dy);
+        continue;
+      }
+
+      if (p.dy == c.dy && p.dx > c.dx && c.dx == n.dx && c.dy < n.dy) {
+        //path.moveTo(c.dx + 10, c.dy);
+        path.quadraticBezierTo(c.dx, c.dy, c.dx, c.dy + 10);
+        path.lineTo(n.dx, n.dy - 10);
+        continue;
+      }
+
+    }
+    path.lineTo(offsets.last.dx, offsets.last.dy);
+
+    canvas.drawPath(path, paint);
   }
 
   void _drawFromCurrentToNext(
-      SleepChartData current, SleepChartData next, Path path) {
+      SleepChartData current, SleepChartData next, Path path, List<Offset> offsets) {
     if (next.level.value > current.level.value) {
+      if (current.index == 0) {
+        path.lineTo(current.borderOffset[1].dx, current.borderOffset[1].dy);
+        offsets.add(Offset(current.borderOffset[1].dx, current.borderOffset[1].dy));
+      }
       path.lineTo(current.borderOffset[1].dx, next.borderOffset[0].dy);
       path.lineTo(next.borderOffset[1].dx, next.borderOffset[1].dy);
+
+      offsets.add(Offset(current.borderOffset[1].dx, next.borderOffset[0].dy));
+      offsets.add(Offset(next.borderOffset[1].dx, next.borderOffset[1].dy));
     } else {
       path.lineTo(next.borderOffset[0].dx, current.borderOffset[1].dy);
       path.lineTo(next.borderOffset[0].dx, next.borderOffset[0].dy);
       path.lineTo(next.borderOffset[1].dx, next.borderOffset[1].dy);
+
+
+      offsets.removeWhere((e) => e.dx == current.borderOffset[1].dx && e.dy == current.borderOffset[1].dy);
+      offsets.add(Offset(next.borderOffset[0].dx, current.borderOffset[1].dy));
+      offsets.add(Offset(next.borderOffset[0].dx, next.borderOffset[0].dy));
+      offsets.add(Offset(next.borderOffset[1].dx, next.borderOffset[1].dy));
+
     }
   }
 
-  void _drawForFirstData() {
-    final paint = Paint()
-      ..color = data.first.level.color.withOpacity(opacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = ChartUtils.strokeWidth
-      ..strokeCap = StrokeCap.square;
-
-    final path = Path();
-    List<Offset> o = ChartUtils.calculateOffsetForItem(
-      item: data.first,
-      data: data,
-      size: size,
+  void drawText(Canvas canvas, String text, Offset offset) {
+    final textStyle = gradient.TextStyle(
+      color: Colors.white,
+      fontSize: 5,
     );
-    ;
-    path.moveTo(o[0].dx, o[0].dy);
-    path.lineTo(o[1].dx - ChartUtils.borderRadius, o[1].dy);
-    if (data[1].level.value > data.first.level.value) {
-      // bo xuống
-      path.quadraticBezierTo(
-          o[1].dx, o[1].dy, o[1].dx, o[1].dy + ChartUtils.borderRadius);
-    } else {
-      // bo lên
-      path.quadraticBezierTo(
-          o[1].dx, o[1].dy, o[1].dx, o[1].dy - ChartUtils.borderRadius);
-    }
-    canvas.drawPath(path, paint);
-  }
-
-  void _drawForLastData() {
-    final paint = Paint()
-      ..color = data.last.level.color.withOpacity(opacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = ChartUtils.strokeWidth
-      ..strokeCap = StrokeCap.square;
-
-    final path = Path();
-    List<Offset> o = ChartUtils.calculateOffsetForItem(
-      item: data.last,
-      data: data,
-      size: size,
+    final paragraphStyle = gradient.ParagraphStyle(
+      textDirection: TextDirection.ltr,
     );
-    ;
-    if (data[data.length - 2].level.value > data.last.level.value) {
-      // bo xuống
-      path.moveTo(o[0].dx, o[0].dy + ChartUtils.borderRadius);
-      if (o[1].dx - o[0].dx < ChartUtils.borderRadius) {
-        path.quadraticBezierTo(o[0].dx, o[0].dy, o[1].dx, o[1].dy);
-      } else {
-        path.quadraticBezierTo(
-            o[0].dx, o[0].dy, o[0].dx + ChartUtils.borderRadius, o[0].dy);
-        path.lineTo(o[1].dx, o[1].dy);
-      }
-    } else {
-      // bo lên
-      path.moveTo(o[0].dx, o[0].dy - ChartUtils.borderRadius);
-      path.quadraticBezierTo(
-          o[0].dx, o[0].dy, o[0].dx + ChartUtils.borderRadius, o[0].dy);
-      path.lineTo(o[1].dx, o[1].dy);
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  void _drawVerticalLine(SleepChartData s1, SleepChartData s2) {
-    List<Offset> o1 = ChartUtils.calculateOffsetForItem(
-      item: s1,
-      data: data,
-      size: size,
-    );
-    List<Offset> o2 = ChartUtils.calculateOffsetForItem(
-      item: s2,
-      data: data,
-      size: size,
-    );
-    late Offset start, end;
-    if (s1.level.value < s2.level.value) {
-      //awke -> rem
-      start = Offset(o1[1].dx,
-          o1[1].dy + ChartUtils.borderRadius + ChartUtils.strokeWidth);
-      end = Offset(o2[0].dx,
-          o2[0].dy - ChartUtils.borderRadius - ChartUtils.strokeWidth);
-    } else {
-      //rem -> awake
-      start = Offset(o2[0].dx,
-          o2[0].dy + ChartUtils.borderRadius + ChartUtils.strokeWidth);
-      end = Offset(o1[1].dx,
-          o1[1].dy - ChartUtils.borderRadius - ChartUtils.strokeWidth);
-    }
-
-    List<Color> colors = s1.level.colorTo(s2.level, opacity: opacity);
-
-    final paint = Paint()
-      ..shader = gradient.Gradient.linear(
-          start, end, colors, ChartUtils.gradientStop(colors.length))
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = ChartUtils.strokeWidth
-      ..strokeCap = StrokeCap.square;
-    canvas.drawLine(start, end, paint);
-  }
-
-  void _drawULine({
-    required SleepChartData pItem,
-    required SleepChartData cItem,
-    required SleepChartData nItem,
-  }) {
-    final paint = Paint()
-      ..color = cItem.level.color.withOpacity(opacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = ChartUtils.strokeWidth
-      ..strokeCap = StrokeCap.square;
-
-    List<Offset> o = ChartUtils.calculateOffsetForItem(
-      item: cItem,
-      data: data,
-      size: size,
-    );
-    final path = Path();
-    if (pItem.level.value < cItem.level.value &&
-        cItem.level.value > nItem.level.value) {
-      //u xuôi
-      //  |   |
-      //  |___|
-      path.moveTo(o[0].dx, o[0].dy - ChartUtils.borderRadius);
-      if (o[1].dx - o[0].dx <= ChartUtils.borderRadius) {
-        path.cubicTo(
-            o[0].dx,
-            o[0].dy + ChartUtils.strokeWidth / 2,
-            o[1].dx,
-            o[1].dy + ChartUtils.strokeWidth / 2,
-            o[1].dx,
-            o[1].dy - ChartUtils.borderRadius);
-      } else {
-        path.quadraticBezierTo(
-            o[0].dx, o[0].dy, o[0].dx + ChartUtils.borderRadius, o[0].dy);
-        path.lineTo(o[1].dx - ChartUtils.borderRadius, o[1].dy);
-        path.quadraticBezierTo(
-            o[1].dx, o[1].dy, o[1].dx, o[1].dy - ChartUtils.borderRadius);
-      }
-    } else if (pItem.level.value > cItem.level.value &&
-        cItem.level.value < nItem.level.value) {
-      //u ngược
-      //  |---|
-      //  |   |
-      path.moveTo(o[0].dx, o[0].dy + ChartUtils.borderRadius);
-      if (o[1].dx - o[0].dx <= ChartUtils.borderRadius) {
-        path.cubicTo(
-            o[0].dx,
-            o[0].dy - ChartUtils.strokeWidth / 2,
-            o[1].dx,
-            o[1].dy - ChartUtils.strokeWidth / 2,
-            o[1].dx,
-            o[1].dy + ChartUtils.borderRadius);
-      } else {
-        path.quadraticBezierTo(
-            o[0].dx, o[0].dy, o[0].dx + ChartUtils.borderRadius, o[0].dy);
-        path.lineTo(o[1].dx - ChartUtils.borderRadius, o[1].dy);
-        path.quadraticBezierTo(
-            o[1].dx, o[1].dy, o[1].dx, o[1].dy + ChartUtils.borderRadius);
-      }
-    } else if (pItem.level.value < cItem.level.value &&
-        cItem.level.value < nItem.level.value) {
-      // S xuôi, S ngược
-      path.moveTo(o[0].dx, o[0].dy - ChartUtils.borderRadius);
-      path.quadraticBezierTo(
-          o[0].dx, o[0].dy, o[0].dx + ChartUtils.borderRadius, o[0].dy);
-      path.lineTo(o[1].dx - ChartUtils.borderRadius, o[1].dy);
-      path.quadraticBezierTo(
-          o[1].dx, o[1].dy, o[1].dx, o[1].dy + ChartUtils.borderRadius);
-    } else if (pItem.level.value > cItem.level.value &&
-        cItem.level.value > nItem.level.value) {
-      // S xuôi, S ngược
-      path.moveTo(o[0].dx, o[0].dy + ChartUtils.borderRadius);
-      path.quadraticBezierTo(
-          o[0].dx, o[0].dy, o[0].dx + ChartUtils.borderRadius, o[0].dy);
-      path.lineTo(o[1].dx - ChartUtils.borderRadius, o[1].dy);
-      path.quadraticBezierTo(
-          o[1].dx, o[1].dy, o[1].dx, o[1].dy - ChartUtils.borderRadius);
-    }
-    canvas.drawPath(path, paint);
-  }
-
-  void _roundConnerTop(Path path, Offset topLeft, Offset topRight) {
-    path.moveTo(topLeft.dx, topLeft.dy + ChartUtils.borderRadius);
-    path.quadraticBezierTo(topLeft.dx, topLeft.dy, topLeft.dx,
-        topLeft.dy + ChartUtils.borderRadius);
-    path.lineTo(topRight.dx - ChartUtils.borderRadius, topRight.dy);
-    path.quadraticBezierTo(topRight.dx, topRight.dy, topRight.dx,
-        topRight.dy + ChartUtils.borderRadius);
+    final paragraphBuilder = gradient.ParagraphBuilder(paragraphStyle)
+      ..pushStyle(textStyle)
+      ..addText(text);
+    final constraints = gradient.ParagraphConstraints(width: 300);
+    final paragraph = paragraphBuilder.build()
+      ..layout(constraints);
+    canvas.drawParagraph(paragraph, offset);
   }
 }
