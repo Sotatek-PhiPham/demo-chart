@@ -43,7 +43,6 @@ class StepLine {
   }
 
   void drawStepLine() {
-
     // _drawForFirstData();
     // _drawForLastData();
     for (int i = 0; i < data.length; i++) {
@@ -67,7 +66,8 @@ class StepLine {
     SleepChartData current = data.first;
     path.moveTo(current.borderOffset[0].dx, current.borderOffset[0].dy);
 
-    offsets.add(Offset(current.borderOffset[0].dx, current.borderOffset[0].dy + 10));
+    offsets.add(
+        Offset(current.borderOffset[0].dx, current.borderOffset[0].dy + 10));
     offsets.add(current.borderOffset[0]);
 
     do {
@@ -85,18 +85,31 @@ class StepLine {
             path.lineTo(next.borderOffset[0].dx, next.borderOffset[0].dy);
             path.lineTo(next.borderOffset[1].dx, next.borderOffset[1].dy);
 
-            offsets.removeWhere((e) => e.dx == current.borderOffset[1].dx && e.dy == current.borderOffset[1].dy);
-            offsets.add(Offset(next.borderOffset[0].dx, current.borderOffset[1].dy));
-            offsets.add(Offset(next.borderOffset[0].dx, next.borderOffset[0].dy));
-            offsets.add(Offset(next.borderOffset[1].dx, next.borderOffset[1].dy));
+            offsets.removeWhere((e) =>
+                e.dx == current.borderOffset[1].dx &&
+                e.dy == current.borderOffset[1].dy);
+            offsets.add(
+                Offset(next.borderOffset[0].dx, current.borderOffset[1].dy));
+            offsets
+                .add(Offset(next.borderOffset[0].dx, next.borderOffset[0].dy));
+            offsets
+                .add(Offset(next.borderOffset[1].dx, next.borderOffset[1].dy));
 
             current = next;
           } else {
             path.lineTo(same.borderOffset[1].dx - 10, same.borderOffset[1].dy);
-            path.lineTo(same.borderOffset[1].dx, same.borderOffset[1].dy,);
+            path.lineTo(
+              same.borderOffset[1].dx,
+              same.borderOffset[1].dy,
+            );
 
-            offsets.removeWhere((e) => e.dx == current.borderOffset[1].dx && e.dy == current.borderOffset[1].dy);
-            offsets.add(Offset(same.borderOffset[1].dx, same.borderOffset[1].dy,));
+            offsets.removeWhere((e) =>
+                e.dx == current.borderOffset[1].dx &&
+                e.dy == current.borderOffset[1].dy);
+            offsets.add(Offset(
+              same.borderOffset[1].dx,
+              same.borderOffset[1].dy,
+            ));
 
             current = same;
           }
@@ -126,22 +139,22 @@ class StepLine {
         path.lineTo(next.borderOffset[2].dx, next.borderOffset[2].dy);
         path.lineTo(next.borderOffset[3].dx, next.borderOffset[3].dy);
 
-          offsets.removeWhere((e) => e.dx == current.borderOffset[3].dx && e.dy == current.borderOffset[3].dy);
-          offsets.add(Offset(next.borderOffset[1].dx, current.borderOffset[3].dy));
-          offsets.add(Offset(next.borderOffset[2].dx, next.borderOffset[2].dy));
-          offsets.add(Offset(next.borderOffset[3].dx, next.borderOffset[3].dy));
-
+        offsets.removeWhere((e) =>
+            e.dx == current.borderOffset[3].dx &&
+            e.dy == current.borderOffset[3].dy);
+        offsets
+            .add(Offset(next.borderOffset[1].dx, current.borderOffset[3].dy));
+        offsets.add(Offset(next.borderOffset[2].dx, next.borderOffset[2].dy));
+        offsets.add(Offset(next.borderOffset[3].dx, next.borderOffset[3].dy));
 
         current = next;
-
-
       } else {
         if (same == null) {
           path.lineTo(current.borderOffset[3].dx, next.borderOffset[3].dy);
           path.lineTo(next.borderOffset[3].dx, next.borderOffset[3].dy);
 
-
-          offsets.add(Offset(current.borderOffset[3].dx, next.borderOffset[3].dy));
+          offsets
+              .add(Offset(current.borderOffset[3].dx, next.borderOffset[3].dy));
           offsets.add(Offset(next.borderOffset[3].dx, next.borderOffset[3].dy));
 
           current = next;
@@ -150,23 +163,28 @@ class StepLine {
             path.lineTo(current.borderOffset[3].dx, next.borderOffset[3].dy);
             path.lineTo(next.borderOffset[3].dx, next.borderOffset[3].dy);
 
-            offsets.add(Offset(current.borderOffset[3].dx, next.borderOffset[3].dy));
-            offsets.add(Offset(next.borderOffset[3].dx, next.borderOffset[3].dy));
+            offsets.add(
+                Offset(current.borderOffset[3].dx, next.borderOffset[3].dy));
+            offsets
+                .add(Offset(next.borderOffset[3].dx, next.borderOffset[3].dy));
 
             current = next;
           } else {
-
             path.lineTo(same.borderOffset[3].dx, same.borderOffset[3].dy);
 
-            offsets.removeWhere((e) => e.dx == current.borderOffset[3].dx && e.dy == current.borderOffset[3].dy);
-            offsets.add(Offset(same.borderOffset[3].dx, same.borderOffset[3].dy));
+            offsets.removeWhere((e) =>
+                e.dx == current.borderOffset[3].dx &&
+                e.dy == current.borderOffset[3].dy);
+            offsets
+                .add(Offset(same.borderOffset[3].dx, same.borderOffset[3].dy));
 
             current = same;
           }
         }
       }
     } while (current.index != 0);
-    offsets.add(Offset(current.borderOffset[0].dx, current.borderOffset[0].dy + 10));
+    offsets.add(
+        Offset(current.borderOffset[0].dx, current.borderOffset[0].dy + 10));
     path.close();
     //canvas.drawPath(path, paint);
 
@@ -174,7 +192,7 @@ class StepLine {
       drawRectangleFrom4Offset(
           offset: ChartUtils.calculate4OffsetForItem(
               item: data[i], data: data, size: size),
-          color: Colors.blue);
+          color: data[i].level.color);
     }
 
     _drawBorder(canvas, offsets);
@@ -187,21 +205,25 @@ class StepLine {
     // for (int i = 0; i < offsets.length; i++) {
     //   canvas.drawCircle(offsets[i], 2, paintCircle);
     // }
-
-
-
-
-
   }
 
   void _drawBorder(Canvas canvas, List<Offset> offsets) {
     final paint = Paint()
-      ..color = Colors.red.withOpacity(0.3)
-      ..style = PaintingStyle.fill;
-      //..strokeWidth = 2.0;
-
-
-
+      ..style = PaintingStyle.fill
+      ..shader = gradient.Gradient.linear(
+          Offset(size.width * 0.4979974, size.height * 0.07694141),
+          Offset(size.width * 0.4979974, size.height * 0.9972677), [
+        SleepStageEnum.awake.color.withOpacity(0.2),
+        SleepStageEnum.rem.color.withOpacity(0.2),
+        SleepStageEnum.light.color.withOpacity(0.2),
+        SleepStageEnum.deep.color.withOpacity(0.2),
+      ], [
+        0,
+        0.342056,
+        0.650641,
+        1
+      ]);
+    //..strokeWidth = 2.0;
 
     final path = Path();
     path.moveTo(offsets[0].dx, offsets[0].dy);
@@ -212,16 +234,16 @@ class StepLine {
       Offset? n1 = i + 2 == offsets.length ? null : offsets[i + 2];
 
       if (c.dx == p.dx && c.dy == n.dy && p.dy > c.dy && n.dx > c.dx) {
-        if (n1 != null && n.dx -c.dx < 20 && n.dy < n1.dy) {
+        if (n1 != null && n.dx - c.dx < 20 && n.dy < n1.dy) {
           //path.moveTo(c.dx, c.dy + 10);
           path.cubicTo(c.dx, c.dy - 3, n.dx, n.dy - 3, n.dx, n.dy + 10);
           path.lineTo(n1.dx, n1.dy - 10);
           i = i + 1;
           continue;
         }
-        if (n1 != null && n.dx -c.dx < 20 && n.dy > n1.dy) {
+        if (n1 != null && n.dx - c.dx < 20 && n.dy > n1.dy) {
           //path.moveTo(c.dx, c.dy + 10);
-          if (n.dx -c.dx <= 10) {
+          if (n.dx - c.dx <= 10) {
             path.quadraticBezierTo(c.dx, c.dy, n.dx, n.dy);
           } else {
             path.quadraticBezierTo(c.dx, c.dy, c.dx + 10, n.dy);
@@ -253,11 +275,11 @@ class StepLine {
         }
         if (n1 != null && n.dx - c.dx < 20 && n.dy < n1.dy) {
           //path.moveTo(c.dx, c.dy - 10);
-          if (n.dx -c.dx <= 10) {
+          if (n.dx - c.dx <= 10) {
             path.lineTo(c.dx, c.dy);
             path.quadraticBezierTo(n.dx, n.dy, n.dx, n.dy + 10);
           } else {
-            path.quadraticBezierTo(c.dx, c.dy, c.dx + (n.dx - c.dx - 10) ,c.dy );
+            path.quadraticBezierTo(c.dx, c.dy, c.dx + (n.dx - c.dx - 10), c.dy);
             path.quadraticBezierTo(n.dx, n.dy, n.dx, n.dy + 10);
           }
           path.lineTo(n1.dx, n1.dy - 10);
@@ -343,19 +365,19 @@ class StepLine {
         path.lineTo(n.dx, n.dy - 10);
         continue;
       }
-
     }
     path.lineTo(offsets.last.dx, offsets.last.dy);
 
     canvas.drawPath(path, paint);
   }
 
-  void _drawFromCurrentToNext(
-      SleepChartData current, SleepChartData next, Path path, List<Offset> offsets) {
+  void _drawFromCurrentToNext(SleepChartData current, SleepChartData next,
+      Path path, List<Offset> offsets) {
     if (next.level.value > current.level.value) {
       if (current.index == 0) {
         path.lineTo(current.borderOffset[1].dx, current.borderOffset[1].dy);
-        offsets.add(Offset(current.borderOffset[1].dx, current.borderOffset[1].dy));
+        offsets.add(
+            Offset(current.borderOffset[1].dx, current.borderOffset[1].dy));
       }
       path.lineTo(current.borderOffset[1].dx, next.borderOffset[0].dy);
       path.lineTo(next.borderOffset[1].dx, next.borderOffset[1].dy);
@@ -367,12 +389,12 @@ class StepLine {
       path.lineTo(next.borderOffset[0].dx, next.borderOffset[0].dy);
       path.lineTo(next.borderOffset[1].dx, next.borderOffset[1].dy);
 
-
-      offsets.removeWhere((e) => e.dx == current.borderOffset[1].dx && e.dy == current.borderOffset[1].dy);
+      offsets.removeWhere((e) =>
+          e.dx == current.borderOffset[1].dx &&
+          e.dy == current.borderOffset[1].dy);
       offsets.add(Offset(next.borderOffset[0].dx, current.borderOffset[1].dy));
       offsets.add(Offset(next.borderOffset[0].dx, next.borderOffset[0].dy));
       offsets.add(Offset(next.borderOffset[1].dx, next.borderOffset[1].dy));
-
     }
   }
 
@@ -388,8 +410,7 @@ class StepLine {
       ..pushStyle(textStyle)
       ..addText(text);
     final constraints = gradient.ParagraphConstraints(width: 300);
-    final paragraph = paragraphBuilder.build()
-      ..layout(constraints);
+    final paragraph = paragraphBuilder.build()..layout(constraints);
     canvas.drawParagraph(paragraph, offset);
   }
 }

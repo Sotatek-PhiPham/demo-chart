@@ -4,10 +4,12 @@ import 'package:demo_chart/sleep_chart_data.dart';
 import 'package:demo_chart/sleep_stage_enum.dart';
 
 class ChartUtils {
-  static const double yAxisWidth = 50.0;
+  static const double yAxisWidth = 60.0;
   static const double xAxisHeight = 50.0;
-  static const double strokeWidth = 3.0;
-  static const double borderRadius = 6.0;
+  static const double strokeWidth = 5.0;
+  static const double borderRadius = 10.0;
+  static const double itemHeight = 40.0;
+  static const double paddingWidthXAxis = 7.0;
   static const int numOfXAxisLabel = 9;
 
   static int countTotalSleepTimeInSeconds(List<SleepChartData> data) {
@@ -61,7 +63,7 @@ class ChartUtils {
     required Size size,
   }) {
     double dxStart = ChartUtils.yAxisWidth;
-    double dyEnd = size.height - ChartUtils.xAxisHeight;
+    double dyEnd = size.height - ChartUtils.xAxisHeight - ChartUtils.itemHeight - paddingWidthXAxis;
     double pixelPerSecond = (size.width - dxStart - ChartUtils.strokeWidth) / countTotalSleepTimeInSeconds(data);
 
     double x1 = dxStart + pixelPerSecond * item.dateTime.difference(data.first.dateTime).inSeconds;
@@ -75,8 +77,8 @@ class ChartUtils {
     return [
       Offset(x1, y1),
       Offset(x2, y2),
-      Offset(x2, y2 + 40),
-      Offset(x1, y1 + 40),
+      Offset(x2, y2 + itemHeight),
+      Offset(x1, y1 + itemHeight),
     ];
   }
 
@@ -86,7 +88,7 @@ class ChartUtils {
     required Size size,
   }) {
     double dxStart = ChartUtils.yAxisWidth;
-    double dyEnd = size.height - ChartUtils.xAxisHeight;
+    double dyEnd = size.height - ChartUtils.xAxisHeight - itemHeight - paddingWidthXAxis;
     double pixelPerSecond = (size.width - dxStart - ChartUtils.strokeWidth) / countTotalSleepTimeInSeconds(data);
 
     double x1 = dxStart + pixelPerSecond * item.dateTime.difference(data.first.dateTime).inSeconds;

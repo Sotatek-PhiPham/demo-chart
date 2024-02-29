@@ -42,18 +42,24 @@ class MainChartPaint extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    XAxis.drawXAxis(canvas: canvas, size: size, startTime: data.first.dateTime, totalTimeInSeconds: ChartUtils.countTotalSleepTimeInSeconds(data));
+    XAxis.drawXAxis(
+      canvas: canvas,
+      size: size,
+      startTime: data.first.dateTime,
+      totalTimeInSeconds: ChartUtils.countTotalSleepTimeInSeconds(data),
+    );
+
     YAxis.drawYAxis(canvas: canvas, size: size);
+
+
 
     StepLine(canvas: canvas, size: size, data: data).drawStepLine();
 
     //SleepStage.drawSleepStage(canvas: canvas, size: size, stage: SleepStageEnum.rem, data: data);
-
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
-
 }

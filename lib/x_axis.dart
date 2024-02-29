@@ -77,7 +77,7 @@ class XAxis {
     final p2 = Offset(ChartUtils.yAxisWidth + position * dis,
         dyStart + (ChartUtils.xAxisHeight / 3));
     final paint = Paint()
-      ..color = Colors.white
+      ..color = Colors.white.withOpacity(0.5)
       ..strokeWidth = lineWidth;
     canvas.drawLine(p1, p2, paint);
   }
@@ -105,7 +105,7 @@ class XAxis {
     Offset p1 = Offset(0, dyStart + ChartUtils.xAxisHeight / 3);
     final p2 = Offset(size.width, dyStart + ChartUtils.xAxisHeight / 3);
     final paint = Paint()
-      ..color = Colors.white
+      ..color = Colors.white.withOpacity(0.5)
       ..strokeWidth = lineWidth;
 
     canvas.drawLine(p1, p2, paint);
@@ -115,9 +115,9 @@ class XAxis {
     required String label,
     double? maxWidth,
   }) {
-    const textStyle = TextStyle(
-      color: Colors.white,
-      fontSize: 15,
+    var textStyle = TextStyle(
+      color: Colors.white.withOpacity(0.5),
+      fontSize: 12,
     );
     final textSpan = TextSpan(
       text: label,

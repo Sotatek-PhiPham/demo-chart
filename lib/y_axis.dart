@@ -13,7 +13,6 @@ class YAxis {
     for (SleepStageEnum item in SleepStageEnum.values) {
       TextPainter tp = _drawYAxisLabel(
         label: item.name,
-        color: item.color,
       );
       tp.paint(canvas, _calculatePositionForYAxisLabel(size: size, sleepStage: item));
     }
@@ -23,22 +22,20 @@ class YAxis {
     required Size size,
     required SleepStageEnum sleepStage,
   }) {
-    double heightOfLabel = _drawYAxisLabel(label: SleepStageEnum.values[0].name, color: sleepStage.color).height;
+    double heightOfLabel = _drawYAxisLabel(label: SleepStageEnum.values[0].name).height;
     const x = 0.0;
-    double distanceBetween2labels = (size.height - ChartUtils.xAxisHeight - (heightOfLabel * SleepStageEnum.values.length)) /
+    double distanceBetween2labels = (size.height - ChartUtils.xAxisHeight - (heightOfLabel * SleepStageEnum.values.length) - ChartUtils.itemHeight - ChartUtils.paddingWidthXAxis) /
         (SleepStageEnum.values.length - 1);
-    final y = sleepStage.value * distanceBetween2labels +
-        sleepStage.value * heightOfLabel;
+    final y = sleepStage.value * distanceBetween2labels + sleepStage.value * heightOfLabel;
     return Offset(x, y);
   }
 
   static TextPainter _drawYAxisLabel({
     required String label,
     double? maxWidth,
-    required Color color,
   }) {
     var textStyle = TextStyle(
-      color: color,
+      color: Colors.white.withOpacity(0.5),
       fontSize: 15,
     );
     final textSpan = TextSpan(

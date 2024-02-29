@@ -27,7 +27,7 @@ class SleepChartData with _$SleepChartData {
   factory SleepChartData.fromJson(Map<String, Object?> json) => _$SleepChartDataFromJson(json);
 }
 
-List<SleepChartData> sleepData = (tmp3['data'] as List<dynamic>).map((e) => SleepChartData.fromJson(e)).toList();
+List<SleepChartData> sleepData = (tmp4['data'] as List<dynamic>).map((e) => SleepChartData.fromJson(e)).toList();
 
 Map<String, dynamic> tmp = {
   "data": [
@@ -217,25 +217,26 @@ Map<String, dynamic> tmp2 = {
 };
 Map<String, dynamic> tmp3 = {
   "data": [
+    // {
+    //   "dateTime": "2024-02-24T01:30:00.000",
+    //   "level": "light",
+    //   "seconds": 660
+    // },
     {
-      "dateTime": "2024-02-24T01:30:00.000",
-      "level": "light",
-      "seconds": 660
-    },
-    {
-      "dateTime": "2024-02-24T01:41:00.000",
+      "dateTime": "2024-02-24T01:26:00.000",
       "level": "wake",
       "seconds": 1020
     },
     {
-      "dateTime": "2024-02-24T01:58:00.000",
-      "level": "light",
+      "dateTime": "2024-02-24T01:43:00.000",
+      // "level": "light",
+      "level": "deep",
       "seconds": 120
     },
     {
-      "dateTime": "2024-02-24T02:00:00.000",
+      "dateTime": "2024-02-24T01:45:00.000",
       "level": "rem",
-      "seconds": 300
+      "seconds": 1200
     },
     {
       "dateTime": "2024-02-24T02:05:00.000",
@@ -282,6 +283,120 @@ Map<String, dynamic> tmp3 = {
       "level": "rem",
       "seconds": 3000
     },
+  ],
+  "shortData": [
+    {"dateTime": "2023-07-21T00:20:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T00:44:00.000", "level": "wake", "seconds": 60},
+    {"dateTime": "2023-07-21T00:52:30.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T01:07:30.000", "level": "wake", "seconds": 90},
+    {"dateTime": "2023-07-21T01:11:00.000", "level": "wake", "seconds": 150},
+    {"dateTime": "2023-07-21T01:15:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T01:20:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T01:42:30.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T02:01:30.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T02:46:30.000", "level": "wake", "seconds": 60},
+    {"dateTime": "2023-07-21T02:58:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T03:00:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T03:02:30.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T03:17:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T03:19:00.000", "level": "wake", "seconds": 60},
+    {"dateTime": "2023-07-21T03:29:30.000", "level": "wake", "seconds": 60},
+    {"dateTime": "2023-07-21T03:32:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T03:40:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T03:49:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T03:53:00.000", "level": "wake", "seconds": 60},
+    {"dateTime": "2023-07-21T04:11:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T04:15:00.000", "level": "wake", "seconds": 180},
+    {"dateTime": "2023-07-21T04:28:30.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T04:32:30.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T04:35:30.000", "level": "wake", "seconds": 90},
+    {"dateTime": "2023-07-21T04:39:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T04:52:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T05:05:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T05:08:30.000", "level": "wake", "seconds": 60},
+    {"dateTime": "2023-07-21T05:14:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T05:25:00.000", "level": "wake", "seconds": 60},
+    {"dateTime": "2023-07-21T05:33:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T05:39:30.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T05:43:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T05:45:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T06:00:00.000", "level": "wake", "seconds": 120},
+    {"dateTime": "2023-07-21T06:06:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T06:15:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T06:23:00.000", "level": "wake", "seconds": 60},
+    {"dateTime": "2023-07-21T06:27:00.000", "level": "wake", "seconds": 60},
+    {"dateTime": "2023-07-21T06:29:30.000", "level": "wake", "seconds": 150},
+    {"dateTime": "2023-07-21T06:53:00.000", "level": "wake", "seconds": 30},
+    {"dateTime": "2023-07-21T06:57:00.000", "level": "wake", "seconds": 60}
+  ]
+};
+Map<String, dynamic> tmp4 = {
+  "data": [
+    {
+      "dateTime": "2024-02-19T23:51:00.000",
+      "level": "wake",
+      "seconds": 660
+    },
+    {
+      "dateTime": "2024-02-20T00:02:00.000",
+      "level": "light",
+      "seconds": 3750
+    },
+    {
+      "dateTime": "2024-02-20T01:04:30.000",
+      "level": "rem",
+      "seconds": 2100
+    },
+    {
+      "dateTime": "2024-02-20T01:39:30.000",
+      "level": "light",
+      "seconds": 3660
+    },
+    {
+      "dateTime": "2024-02-20T02:40:30.000",
+      "level": "deep",
+      "seconds": 1530
+    },
+    {
+      "dateTime": "2024-02-20T03:06:00.000",
+      "level": "light",
+      "seconds": 1680
+    },
+    {
+      "dateTime": "2024-02-20T03:34:00.000",
+      "level": "rem",
+      "seconds": 1770
+    },
+    {
+      "dateTime": "2024-02-20T04:03:30.000",
+      "level": "light",
+      "seconds": 2820
+    },
+    {
+      "dateTime": "2024-02-20T04:50:30.000",
+      "level": "rem",
+      "seconds": 2640
+    },
+    {
+      "dateTime": "2024-02-20T05:34:30.000",
+      "level": "light",
+      "seconds": 2820
+    },
+    {
+      "dateTime": "2024-02-20T06:21:30.000",
+      "level": "rem",
+      "seconds": 270
+    },
+    {
+      "dateTime": "2024-02-20T06:26:00.000",
+      "level": "light",
+      "seconds": 840
+    },
+    {
+      "dateTime": "2024-02-20T06:40:00.000",
+      "level": "wake",
+      "seconds": 330
+    }
   ],
   "shortData": [
     {"dateTime": "2023-07-21T00:20:00.000", "level": "wake", "seconds": 30},

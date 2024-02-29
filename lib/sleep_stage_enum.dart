@@ -45,13 +45,13 @@ extension SleepStageEnumExtension on SleepStageEnum {
   Color get color {
     switch (this) {
       case SleepStageEnum.awake:
-        return Color(0xffFF6060);
+        return Color(0xffFF8F28);
       case SleepStageEnum.rem:
-        return Color(0xffDA75FD);
+        return Color(0xff9C85F7);
       case SleepStageEnum.light:
-        return Color(0xff76BDFF);
+        return Color(0xff00AFEB);
       case SleepStageEnum.deep:
-        return Color(0xff4E61C5);
+        return Color(0xff5C71DB);
     }
   }
 
