@@ -8,7 +8,7 @@ class ChartUtils {
   static const double xAxisHeight = 50.0;
   static const double strokeWidth = 5.0;
   static const double borderRadius = 10.0;
-  static const double itemHeight = 40.0;
+  static const double itemHeight = 35.0;
   static const double paddingWidthXAxis = 7.0;
   static const int numOfXAxisLabel = 9;
 
@@ -102,8 +102,8 @@ class ChartUtils {
     return [
       Offset(x1 -4, y1 -4),
       Offset(x2 + 4, y2 -4),
-      Offset(x2 + 4, y2 + 44),
-      Offset(x1 - 4, y1 + 44),
+      Offset(x2 + 4, y2 + 4 + itemHeight),
+      Offset(x1 - 4, y1 + 4 + itemHeight),
     ];
   }
 
